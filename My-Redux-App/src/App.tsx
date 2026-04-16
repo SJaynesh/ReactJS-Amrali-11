@@ -1,31 +1,32 @@
-import { useDispatch, useSelector } from "react-redux";
-import { decrement, increment, themeChange } from "./features/counter/couterSlice";
-import type { RootState } from "./app/store";
-import Home from "./components/Home";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import { Link, Outlet } from "react-router";
 
 function App() {
-  const count = useSelector((state: RootState) => state.count); // only for get/fetch state 
-  const theme = useSelector((state: RootState) => state.theme);
 
-  const dispatch = useDispatch(); // only for access Action 
 
   return <>
-    <div style={{ backgroundColor: theme === 'light' ? 'white' : 'black', color: theme === 'light' ? 'black' : 'white' }}>
-      <center>
-        <h1>My Redux App</h1>
+    <Provider store={store}>
 
-        <h2>Count : {count}</h2>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
 
-        <div>
-          <button onClick={() => dispatch(increment())}>Increment (+)</button>
-          <button onClick={() => dispatch(decrement())}>Decrement (-)</button>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
 
-          <button onClick={() => dispatch(themeChange())}>Theme Change</button>
-        </div>
-      </center >
+          <li>
+            <Link to="/counter-page">Counter</Link>
+          </li>
+        </ul>
+      </nav>
 
-      <Home />
-    </div >
+      <Outlet />
+
+    </Provider>
   </>
 }
 
