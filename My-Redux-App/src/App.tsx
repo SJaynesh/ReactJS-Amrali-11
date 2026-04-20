@@ -1,33 +1,21 @@
 import { Provider } from "react-redux";
 import { store } from "./app/store";
-import { Link, Outlet } from "react-router";
+import { Outlet } from "react-router";
+import NavBar from "./components/NavBar";
+import { ToastContainer } from "react-toastify";
 
 function App() {
+  return (
+    <>
+      <Provider store={store}>
+        <NavBar />
 
+        <Outlet />
 
-  return <>
-    <Provider store={store}>
-
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-
-          <li>
-            <Link to="/counter-page">Counter</Link>
-          </li>
-        </ul>
-      </nav>
-
-      <Outlet />
-
-    </Provider>
-  </>
+        <ToastContainer />
+      </Provider>
+    </>
+  );
 }
 
 export default App;

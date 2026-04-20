@@ -1,10 +1,12 @@
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from 'react-router';
-import HomePage from './pages/HomePage.tsx';
-import AboutPage from './pages/AboutPage.tsx';
-import CounterPage from './pages/CounterPage.tsx';
+import { createBrowserRouter, RouterProvider } from "react-router";
+import HomePage from "./pages/HomePage.tsx";
+import AddProductPage from "./pages/AddProductPage.tsx";
+import CounterPage from "./pages/CounterPage.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
+import ViewProductPage from "./pages/ViewProductPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -13,20 +15,28 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: HomePage
+        Component: HomePage,
       },
       {
-        path: "about",
-        Component: AboutPage
+        path: "add-product",
+        Component: AddProductPage,
+      },
+      {
+        path: "view-product",
+        Component: ViewProductPage, 
       },
       {
         path: "counter-page",
-        Component: CounterPage
-      }
-    ]
-  }
+        Component: CounterPage,
+      },
+      {
+        path: "*",
+        Component: NotFoundPage,
+      },
+    ],
+  },
 ]);
 
-createRoot(document.getElementById('root')!).render(
-  <RouterProvider router={router} />
-)
+createRoot(document.getElementById("root")!).render(
+  <RouterProvider router={router} />,
+);
