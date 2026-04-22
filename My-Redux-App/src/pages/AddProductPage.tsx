@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { addProduct } from "../features/product/productSlice";
 
 export default function AddProductPage() {
   const [productData, setProductData] = useState({
@@ -12,45 +14,95 @@ export default function AddProductPage() {
     p_description: "",
   });
 
+  const [error, setError] = useState<any>({});
+
+  const dispatch = useDispatch();
+
+  const validation = () => {
+    let errorMessage: any = {};
+
+    if (!productData.p_name) {
+      errorMessage.p_name = "product name is required...";
+    }
+
+    if (productData.p_price === 0) {
+      errorMessage.p_price = "product price is required...";
+    }
+
+    if (productData.p_price < 0) {
+      errorMessage.p_price = "please enter valide product price";
+    }
+
+    if (productData.p_stock === 0) {
+      errorMessage.p_stock = "product stock is required...";
+    }
+
+    if (productData.p_stock < 0) {
+      errorMessage.p_stock = "please enter valide product stock";
+    }
+
+    if (!productData.p_category) {
+      errorMessage.p_category = "product category is required..";
+    }
+
+    if (!productData.p_image) {
+      errorMessage.p_image = "product image is required..";
+    }
+
+    if (!productData.p_description) {
+      errorMessage.p_description = "product description is required..";
+    }
+
+    setError(errorMessage);
+
+    return Object.keys(errorMessage).length === 0;
+
+    // 6 === 0 // false
+  };
+
   const onSubmit = (event: any) => {
     event.preventDefault();
 
     console.log("Form Submitted...");
 
-    if (!productData.p_name) {
-      toast.error("product name is required...");
+    if (!validation()) {
       return;
     }
 
-    if (productData.p_price === 0) {
-      toast.error("product price is required...");
-      return;
-    } else if (productData.p_price < 0) {
-      toast.error("please enter valid price..");
-      return;
-    }
+    // if (!productData.p_name) {
+    //   toast.error("product name is required...");
+    //   return;
+    // }
 
-    if (productData.p_stock === 0) {
-      toast.error("product stock is required...");
-      return;
-    }
+    // if (productData.p_price === 0) {
+    //   toast.error("product price is required...");
+    //   return;
+    // } else if (productData.p_price < 0) {
+    //   toast.error("please enter valid price..");
+    //   return;
+    // }
 
-    if (!productData.p_category) {
-      toast.error("product category is required...");
-      return;
-    }
+    // if (productData.p_stock === 0) {
+    //   toast.error("product stock is required...");
+    //   return;
+    // }
 
-    if (!productData.p_image) {
-      toast.error("product image is required...");
-      return;
-    }
+    // if (!productData.p_category) {
+    //   toast.error("product category is required...");
+    //   return;
+    // }
 
-    if (!productData.p_description) {
-      toast.error("product description is required...");
-      return;
-    }
+    // if (!productData.p_image) {
+    //   toast.error("product image is required...");
+    //   return;
+    // }
 
-    console.log(productData);
+    // if (!productData.p_description) {
+    //   toast.error("product description is required...");
+    //   return;
+    // }
+
+    dispatch(addProduct(productData));
 
     toast.success("Product added successfully..");
 
@@ -100,8 +152,10 @@ export default function AddProductPage() {
                   }));
                 }}
                 placeholder="e.g. Wireless Bluetooth Headphones"
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400"
+                className={`w-full px-4 py-3 rounded-xl border ${error.p_name ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400`}
               />
+
+              {error.p_name && <p className="text-red-500">{error.p_name}</p>}
             </div>
 
             {/* Row: Price, Stock, Category */}
@@ -121,8 +175,11 @@ export default function AddProductPage() {
                     }));
                   }}
                   placeholder="0.00"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className={`w-full px-4 py-3 rounded-xl border ${error.p_price ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400`}
                 />
+                {error.p_price && (
+                  <p className="text-red-500">{error.p_price}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -139,8 +196,11 @@ export default function AddProductPage() {
                     }));
                   }}
                   placeholder="0"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className={`w-full px-4 py-3 rounded-xl border ${error.p_stock ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400`}
                 />
+                {error.p_stock && (
+                  <p className="text-red-500">{error.p_stock}</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -155,13 +215,16 @@ export default function AddProductPage() {
                       p_category: event.target.value,
                     }));
                   }}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-white"
+                  className={`w-full px-4 py-3 rounded-xl border ${error.p_category ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400`}
                 >
                   <option value="Select">Select Category</option>
                   <option value="Electronic">Electronic</option>
                   <option value="Home & Living">Home & Living</option>
                   <option value="Fashion">Fashion</option>
                 </select>
+                {error.p_category && (
+                  <p className="text-red-500">{error.p_category}</p>
+                )}
               </div>
             </div>
 
@@ -182,7 +245,7 @@ export default function AddProductPage() {
                     }));
                   }}
                   placeholder="https://example.com/image.jpg"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all pl-10"
+                  className={`w-full px-4 py-3 rounded-xl border ${error.p_image ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400`}
                 />
                 <span className="absolute left-3 top-3.5 text-gray-400">
                   <svg
@@ -201,6 +264,7 @@ export default function AddProductPage() {
                   </svg>
                 </span>
               </div>
+              {error.p_image && <p className="text-red-500">{error.p_image}</p>}
             </div>
 
             {/* Product Description */}
@@ -219,8 +283,11 @@ export default function AddProductPage() {
                   }));
                 }}
                 placeholder="Describe the key features and specifications..."
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none transition-all resize-none"
+                className={`w-full px-4 py-3 rounded-xl border ${error.p_description ? "border-red-500" : "border-gray-300"} focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400`}
               ></textarea>
+              {error.p_description && (
+                <p className="text-red-500">{error.p_description}</p>
+              )}
             </div>
           </div>
 

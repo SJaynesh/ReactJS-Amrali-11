@@ -7,8 +7,8 @@ import {
 } from "../features/counter/couterSlice";
 
 export default function CounterPage() {
-  const count = useSelector((state: RootState) => state.count);
-  const theme = useSelector((state: RootState) => state.theme);
+  const count = useSelector((state: RootState) => state.counterReducer.count);
+  const theme = useSelector((state: RootState) => state.counterReducer.theme);
   const dispatch = useDispatch();
 
   // Dynamic classes based on Redux theme state
